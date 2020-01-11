@@ -46,7 +46,7 @@ void loop() {
     while (client.connected()) {
          distanceFront = sonarF.ping_cm();
          distanceRight = sonarR.ping_cm();
-         distanceLeft = sonarL.ping_cm();
+         QdistanceLeft = sonarL.ping_cm();
          data = String(String(distanceLeft) + String(' ') + String(distanceFront) + String(' ') + String(distanceRight));
          Serial.println(data);
 //         Serial.print(distanceLeft);
