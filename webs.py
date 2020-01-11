@@ -1,17 +1,35 @@
 import websocket
-import time
+#import time
  
 ws = websocket.WebSocket()
 ws.connect("ws://192.168.43.120")
- 
-i = 0
-nrOfMessages = 200
- 
-while i<nrOfMessages:
-    ws.send("message nr: " + str(i))
-    result = ws.recv()
-    print(result)
-    i=i+1
-    time.sleep(1)
- 
+
+thresh = 10
+
+def parse(string):
+    return [int (element) for element in string.split()]
+
+def getDirection(distances):
+    distanceFront = distances[1]
+    distanceRight = distances[2]
+    distanceLeft = distances[0]
+    if(distanceRight<thresh , distanceFront>thresh):
+        print('Aagge badho right mat mudna')
+    elif(distanceFront<thresh , distanceRight<thresh):
+        print('Aagge aur right mat jaana bas')
+    elif(distanceFront<thresh , distanceRight>thresh , distanceLeft>thresh):
+        print('bhai aagey mat jana')
+    elif(distanceFront<thresh , distanceLeft<thresh):
+        print('peeche aur right he jaa sakte hain')
+    elif(distanceFront>thresh , distanceLeft<thresh):
+        print('left mat mudna bhai')
+    else:
+        print('maaf karo humko nahi pata')
+    
+
+while 1:
+    data = ws.recv()
+    distances = parse(string=data)
+    print(distances)
+
 ws.close()
