@@ -1,6 +1,6 @@
 import websocket
 #import time
- 
+import keyboard 
 ws = websocket.WebSocket()
 ws.connect("ws://192.168.43.120")
 
@@ -31,5 +31,12 @@ while 1:
     data = ws.recv()
     distances = parse(string=data)
     print(distances)
-
+    if(keyboard.is_pressed('w')):
+        ws.send('W')
+    if(keyboard.is_pressed('a')):
+        ws.send('A')
+    if(keyboard.is_pressed('s')):
+        ws.send('S')
+    if(keyboard.is_pressed('d')):
+        ws.send('D')
 ws.close()

@@ -1,3 +1,4 @@
+#include <L298N.h>
 #include <NewPing.h>
 #include <ESP8266WiFi.h>
 #include <WebSocketServer.h>
@@ -11,9 +12,15 @@ WebSocketServer webSocketServer;
 const char* ssid = "Parth";
 const char* password =  "parth1234";
 
-NewPing sonarF (D1,D2,sonar_range);
-NewPing sonarL (D3,D4,sonar_range);
-NewPing sonarR (D5,D6,sonar_range);
+NewPing sonarF (D0,D1,sonar_range);
+NewPing sonarL (D2,D3,sonar_range);
+NewPing sonarR (D4,D5,sonar_range);
+
+#define in1Left D6
+#define in2Left D7
+
+#define in1Right D8
+#define in2Right 11
 
 int distanceLeft = 0, distanceFront = 0, distanceRight = 0;
 String data;
@@ -23,6 +30,12 @@ void setup() {
  
   WiFi.begin(ssid, password); 
   NewPing sonar();
+
+  pinMode(in1Right,OUTPUT);
+  pinMode(in2Right,OUTPUT);
+
+  pinMode(in1Left,OUTPUT);
+  pinMode(in2Left,OUTPUT);
  
   while (WiFi.status() != WL_CONNECTED) {
     delay(1000);
@@ -45,8 +58,8 @@ void loop() {
 
     while (client.connected()) {
          distanceFront = sonarF.ping_cm();
-         distanceRight = sonarR.ping_cm();
-         QdistanceLeft = sonarL.ping_cm();
+//         distanceRight = sonarR.ping_cm();
+//         distanceLeft = sonarL.ping_cm();
          data = String(String(distanceLeft) + String(' ') + String(distanceFront) + String(' ') + String(distanceRight));
          Serial.println(data);
 //         Serial.print(distanceLeft);
@@ -55,7 +68,45 @@ void loop() {
 //         Serial.print(' ');
 //         Serial.println(distanceRight);
          webSocketServer.sendData(data);
-         delay(1000); // Delay needed for receiving the data correctly
+         String command =  webSocketServer.getData();
+         Serial.println('command :'+command);
+         if(command="W"){
+          //forward
+          digitalWrite(in1Right,HIGH);
+          digitalWrite(in1Left,HIGH);
+
+          digitalWrite(in2Right,LOW);
+          digitalWrite(in2Left,LOW);
+         }
+         else if (command="S"){
+          //backwards
+          digitalWrite(in2Right,HIGH);
+          digitalWrite(in2Left,HIGH);
+
+          digitalWrite(in1Right,LOW);
+          digitalWrite(in1Left,LOW);
+         }else if(command="A"){
+          //left
+          digitalWrite(in1Left,HIGH);
+          digitalWrite(in2Left,LOW);
+
+          digitalWrite(in1Right,LOW);
+          digitalWrite(in2Right,HIGH);
+         }else if(command="D"){
+          //right
+          digitalWrite(in1Left,LOW);
+          digitalWrite(in2Left,HIGH);
+
+          digitalWrite(in1Right,HIGH);
+          digitalWrite(in2Right,LOW);
+         }else{
+          digitalWrite(in1Left,LOW);
+          digitalWrite(in2Left,LOW);
+
+          digitalWrite(in1Right,LOW);
+          digitalWrite(in2Right,LOW);
+         }
+         delay(500); // Delay needed for receiving the data correctly
     }
    Serial.println("The client disconnected");
    delay(100);

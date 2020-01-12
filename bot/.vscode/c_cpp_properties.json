@@ -1,0 +1,19 @@
+{
+    "configurations": [
+        {
+            "name": "Linux",
+            "includePath": [
+                "/home/parth/Arduino/libraries/L298N/src",
+                "/home/parth/Arduino/libraries/ESP8266-Websocket-master",
+                "/home/parth/Arduino/libraries/Arduino_Uno_WiFi_Dev_Ed_Library/src",
+                "/home/parth/Arduino/libraries/NewPing/src"
+            ],
+            "defines": [],
+            "compilerPath": "/usr/share/arduino/arduino-builder",
+            "cStandard": "c11",
+            "cppStandard": "c++17",
+            "intelliSenseMode": "clang-x64"
+        }
+    ],
+    "version": 4
+}
